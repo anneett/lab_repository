@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -13,7 +13,7 @@ struct Truba
 
 struct KS
 {
-	string nazvan;
+	string nazvan; 
 	int tsekh;
 	int tsekh_rab;
 	char effect;
@@ -60,23 +60,101 @@ void PrintKS(KS ks)
 		<< "\tEnter efficiency: " << ks.effect << endl;
 };
 
+//int selection()
+//{
+//	int number = 0;
+//	cout << "Select: ";
+//	cin >> number;
+//	while (cin.fail())
+//	{
+//		cin.clear();
+//		cin.ignore(1000, '\n');
+//		cout << "Try again\n";
+//		cin >> number;
+//	}
+//	return number;
+//}
+
 int main()
 {
-	/*vector <Truba> trub_group;
-	size_t n = 0;
-	cin >> n;
-	trub_group.resize(n);*/
+	cout << "Select menu item: "
+		<< "\n1. Add pipe;"
+		<< "\n2. Add KS;"
+		<< "\n3. View all objects;"
+		<< "\n4. Edit pipe;"
+		<< "\n5. Edit KS;"
+		<< "\n6. Save;"
+		<< "\n7. Download;"
+		<< "\n8. Exit." << endl;
 
-	Truba tr = CreateTruba();
-	PrintTruba(tr);
+	int number = 0;
+	cout << "Select: ";
+	cin >> number;
+	while (cin.fail())
+	{
+		cin.clear();
+		cin.ignore(1000, '\n');
+		cout << "Try again\n";
+		cin >> number;
+	}
 
-	/*vector <KS> ks_group;
-	size_t m = 0;
-	cin >> m;
-	ks_group.resize(m);*/
-
-	KS ks = CreateKS();
-	PrintKS(ks);
+	switch (number)
+	{
+	case 1:
+	{
+		Truba tr = CreateTruba();
+		//PrintTruba(tr);
+		main();
+		break;
+	}
+	case 2:
+	{
+		KS ks = CreateKS();
+		//PrintKS(ks);
+		main();
+		break;
+	}
+	case 3:
+	{
+		cout << "vibrano 3" << endl;
+		main();
+		break;
+	}
+	case 4:
+	{
+		cout << "vibrano 4" << endl;
+		main();
+		break;
+	}
+	case 5:
+	{
+		cout << "vibrano 5" << endl;
+		main();
+		break;
+	}
+	case 6:
+	{
+		cout << "vibrano 6" << endl;
+		main();
+		break;
+	}
+	case 7:
+	{
+		cout << "vibrano 7" << endl;
+		main();
+		break;
+	}
+	case 8:
+	{
+		cout << "vixod" << endl;
+		break;
+	}
+	default:
+	{
+		cout << "Enter a number from 1 to 8!" << endl;
+		break;
+	}
+	}
 
 	return 0;
 }
