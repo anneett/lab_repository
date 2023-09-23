@@ -19,17 +19,81 @@ struct KS
 	char effect = 'A';
 };
 
+int proverka_int(int& chislo)
+{
+	cin >> chislo;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100000, '\n');
+		cout << "\nEnter data of type integer!\n";
+		cin >> chislo;
+	}
+	return chislo;
+}
+
+string proverka_str(string& stroka)
+{
+	cin >> stroka;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100000, '\n');
+		cout << "\nEnter string data!\n";
+		cin >> stroka;
+	}
+	return stroka;
+}
+
+double proverka_doub(double& doub)
+{
+	cin >> doub;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100000, '\n');
+		cout << "\nEnter double data!\n";
+		cin >> doub;
+	}
+	return doub;
+}
+
+bool proverka_bool(bool& bob)
+{
+	cin >> bob;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100000, '\n');
+		cout << "\nEnter bool data!\n";
+		cin >> bob;
+	}
+	return bob;
+}
+
+char proverka_char(char& symbol)
+{
+	cin >> symbol;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100000, '\n');
+		cout << "\nEnter data of type  char!\n";
+		cin >> symbol;
+	}
+	return symbol;
+}
+
 Truba CreateTruba()
 {
 	Truba tb;
 	cout << "Enter pipe elevation: ";
-	cin >> tb.otmetka;
+	proverka_str(tb.otmetka);
+	//cin >> tb.otmetka;
 	cout << "Enter pipe length: ";
-	cin >> tb.dlina;
+	proverka_doub(tb.dlina);
+	//cin >> tb.dlina;
 	cout << "Enter pipe diameter: ";
-	cin >> tb.diametr;
+	proverka_int(tb.diametr);
+	//cin >> tb.diametr;
 	cout << "Enter the pipe attribute: ";
-	cin >> tb.remont;
+	proverka_bool(tb.remont);
+	//cin >> tb.remont;
 	return tb;
 };
 
@@ -37,13 +101,17 @@ KS CreateKS()
 {
 	KS kc;
 	cout << "Enter the title: ";
-	cin >> kc.nazvan;
+	proverka_str(kc.nazvan);
+	//cin >> kc.nazvan;
 	cout << "Enter the number of workshops: ";
-	cin >> kc.tsekh;
+	proverka_int(kc.tsekh);
+	//cin >> kc.tsekh;
 	cout << "Enter the number of workshops in operation: ";
-	cin >> kc.tsekh_rab;
+	proverka_int(kc.tsekh_rab);
+	//cin >> kc.tsekh_rab;
 	cout << "Enter efficiency: ";
-	cin >> kc.effect;
+	proverka_char(kc.effect);
+	//cin >> kc.effect;
 	return kc;
 };
 
@@ -63,17 +131,7 @@ void PrintKS(KS ks)
 		<< "\nEnter efficiency: " << ks.effect << endl;
 };
 
-int proverka_int(int& chislo)
-{
-	cin >> chislo;
-	while (cin.fail()) {
-		cin.clear();
-		cin.ignore(100000, '\n');
-		cout << "Try again\n";
-		cin >> chislo;
-	}
-	return chislo;
-}
+
 
 int main()
 {
@@ -91,17 +149,9 @@ int main()
 			<< "\n8. Exit." << endl;
 
 		int number = 0;
-		cout << "\nSelect: ";/*
-		cin >> number;*/
+		cout << "\nSelect: ";
 
 		proverka_int(number);
-		/*while (cin.fail())
-		{
-			cin.clear();
-			cin.ignore(1000, '\n');
-			cout << "Try again\n";
-			cin >> number;
-		}*/
 
 		switch (number)
 		{
@@ -126,13 +176,15 @@ int main()
 		case 4:
 		{
 			cout << "\nChange the sign 'in repair': ";
-			cin >> pipe.remont;
+			proverka_bool(pipe.remont);
+			//cin >> pipe.remont;
 			break;
 		}
 		case 5:
 		{
-			cout << "\nChange the number of workshops in operation: " << endl;
-			cin >> station.tsekh_rab;
+			cout << "\nChange the number of workshops in operation: ";
+			proverka_int(station.tsekh_rab);
+			//cin >> station.tsekh_rab;
 			break;
 		}
 		case 6:
@@ -145,13 +197,13 @@ int main()
 			cout << "vibrano 7" << endl;
 			break;
 		}
-		case 8:
+		case 0:
 		{
 			return false;
 		}
 		default:
 		{
-			cout << "Enter a number from 1 to 8!" << endl;
+			cout << "Enter a number from 0 to 7!" << endl;
 			break;
 		}
 		}
