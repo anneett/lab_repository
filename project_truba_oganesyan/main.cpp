@@ -5,7 +5,7 @@ using namespace std;
 
 struct Truba
 {
-	string otmetka = "0 km";
+	string otmetka = "none";
 	double dlina = 0;
 	int diametr = 0;
 	bool remont = false;
@@ -13,7 +13,7 @@ struct Truba
 
 struct KS
 {
-	string nazvan = "no";
+	string nazvan = "none";
 	int tsekh = 0;
 	int tsekh_rab = 0;
 	char effect = 'A';
@@ -63,27 +63,24 @@ void PrintKS(KS ks)
 		<< "\nEnter efficiency: " << ks.effect << endl;
 };
 
-//int selection()
-//{
-//	int number = 0;
-//	cout << "Select: ";
-//	cin >> number;
-//	while (cin.fail())
-//	{
-//		cin.clear();
-//		cin.ignore(1000, '\n');
-//		cout << "Try again\n";
-//		cin >> number;
-//	}
-//	return number;
-//}
+int proverka_int(int& chislo)
+{
+	cin >> chislo;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(100000, '\n');
+		cout << "Try again\n";
+		cin >> chislo;
+	}
+	return chislo;
+}
 
 int main()
 {
 	Truba pipe;
 	KS station;
 	while (true) {
-		cout << "Select menu item: "
+		cout << "\nSelect menu item: "
 			<< "\n1. Add pipe;"
 			<< "\n2. Add KS;"
 			<< "\n3. View all objects;"
@@ -94,15 +91,17 @@ int main()
 			<< "\n8. Exit." << endl;
 
 		int number = 0;
-		cout << "Select: ";
-		cin >> number;
-		while (cin.fail())
+		cout << "\nSelect: ";/*
+		cin >> number;*/
+
+		proverka_int(number);
+		/*while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(1000, '\n');
 			cout << "Try again\n";
 			cin >> number;
-		}
+		}*/
 
 		switch (number)
 		{
@@ -118,19 +117,22 @@ int main()
 		}
 		case 3:
 		{
-			cout << "vibrano 3" << endl;
+			cout << "\nPipe" << endl;
 			PrintTruba(pipe);
+			cout << "\nCompressor station" << endl;
 			PrintKS(station);
 			break;
 		}
 		case 4:
 		{
-			cout << "vibrano 4" << endl;
+			cout << "\nChange the sign 'in repair': ";
+			cin >> pipe.remont;
 			break;
 		}
 		case 5:
 		{
-			cout << "vibrano 5" << endl;
+			cout << "\nChange the number of workshops in operation: " << endl;
+			cin >> station.tsekh_rab;
 			break;
 		}
 		case 6:
@@ -145,8 +147,7 @@ int main()
 		}
 		case 8:
 		{
-			cout << "vixod" << endl;
-			break;
+			return false;
 		}
 		default:
 		{
