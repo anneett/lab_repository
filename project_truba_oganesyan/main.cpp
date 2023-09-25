@@ -7,11 +7,11 @@ struct Truba
 {
 	string otmetka = "none";
 	double dlina = 0;
-	int diametr = 0;
+	int diameter = 0;
 	bool remont = false;
 };
 
-struct KS
+struct CS
 {
 	string nazvan = "none";
 	int tsekh = 0;
@@ -89,7 +89,7 @@ Truba CreateTruba()
 	proverka_doub(tb.dlina);
 	//cin >> tb.dlina;
 	cout << "Enter pipe diameter: ";
-	proverka_int(tb.diametr);
+	proverka_int(tb.diameter);
 	//cin >> tb.diametr;
 	cout << "Enter the pipe attribute: ";
 	proverka_bool(tb.remont);
@@ -97,33 +97,33 @@ Truba CreateTruba()
 	return tb;
 };
 
-KS CreateKS()
+CS CreateCS()
 {
-	KS kc;
+	CS cc;
 	cout << "Enter the title: ";
-	proverka_str(kc.nazvan);
-	//cin >> kc.nazvan;
+	proverka_str(cc.nazvan);
+	//cin >> cc.nazvan;
 	cout << "Enter the number of workshops: ";
-	proverka_int(kc.tsekh);
-	//cin >> kc.tsekh;
+	proverka_int(cc.tsekh);
+	//cin >> cc.tsekh;
 	cout << "Enter the number of workshops in operation: ";
-	proverka_int(kc.tsekh_rab);
-	//cin >> kc.tsekh_rab;
+	proverka_int(cc.tsekh_rab);
+	//cin >> cc.tsekh_rab;
 	cout << "Enter efficiency: ";
-	proverka_char(kc.effect);
-	//cin >> kc.effect;
-	return kc;
+	proverka_char(cc.effect);
+	//cin >> cc.effect;
+	return cc;
 };
 
 void PrintTruba(Truba tr)
 {
 	cout << "Pipe elevation: " << tr.otmetka
 		<< "\nPipe length: " << tr.dlina
-		<< "\nPipe diameter: " << tr.diametr
+		<< "\nPipe diameter: " << tr.diameter
 		<< "\nThe pipe attribute: " << tr.remont << endl;
 };
 
-void PrintKS(KS ks)
+void PrintCS(CS ks)
 {
 	cout << "Title: " << ks.nazvan
 		<< "\nEnter the number of workshops: " << ks.tsekh
@@ -131,22 +131,20 @@ void PrintKS(KS ks)
 		<< "\nEnter efficiency: " << ks.effect << endl;
 };
 
-
-
 int main()
 {
 	Truba pipe;
-	KS station;
+	CS station;
 	while (true) {
 		cout << "\nSelect menu item: "
 			<< "\n1. Add pipe;"
-			<< "\n2. Add KS;"
+			<< "\n2. Add compressor station;"
 			<< "\n3. View all objects;"
 			<< "\n4. Edit pipe;"
-			<< "\n5. Edit KS;"
+			<< "\n5. Edit compressor station;"
 			<< "\n6. Save;"
 			<< "\n7. Download;"
-			<< "\n8. Exit." << endl;
+			<< "\n0. Exit." << endl;
 
 		int number = 0;
 		cout << "\nSelect: ";
@@ -162,39 +160,76 @@ int main()
 		}
 		case 2:
 		{
-			station = CreateKS();
+			station = CreateCS();
 			break;
 		}
 		case 3:
 		{
+			cout << "\All objects: " << endl;
 			cout << "\nPipe" << endl;
 			PrintTruba(pipe);
 			cout << "\nCompressor station" << endl;
-			PrintKS(station);
+			PrintCS(station);
 			break;
 		}
 		case 4:
 		{
-			cout << "\nChange the sign 'in repair': ";
+			cout << "Change the sign 'in repair': ";
 			proverka_bool(pipe.remont);
 			//cin >> pipe.remont;
 			break;
 		}
 		case 5:
 		{
-			cout << "\nChange the number of workshops in operation: ";
+			cout << "Change the number of workshops in operation: ";
 			proverka_int(station.tsekh_rab);
 			//cin >> station.tsekh_rab;
 			break;
 		}
 		case 6:
 		{
-			cout << "vibrano 6" << endl;
+			cout << "Data written to file." << endl;
+			ofstream fout("data");
+			if (fout)
+			{
+				fout << pipe.otmetka << endl;
+				fout << pipe.dlina << endl;
+				fout << pipe.diameter << endl;
+				fout << pipe.remont << endl;
+				fout << station.nazvan << endl;
+				fout << station.tsekh << endl;
+				fout << station.tsekh_rab << endl;
+				fout << station.effect << endl;
+				fout.close();
+			}
 			break;
 		}
 		case 7:
 		{
-			cout << "vibrano 7" << endl;
+			cout << "Data received from file:\n" << endl;
+			ifstream fin("data");
+			if (fin)
+			{
+				cout << "Pipe" << endl;
+				fin >> pipe.otmetka;
+				cout << "Pipe elevation: " << pipe.otmetka << endl;
+				fin >> pipe.dlina;
+				cout <<  "Pipe length: " << pipe.dlina << endl;
+				fin >> pipe.diameter;
+				cout << "Pipe diameter: " << pipe.diameter << endl;
+				fin >> pipe.remont;
+				cout <<  "The pipe attribute: " << pipe.remont << endl;
+				cout << "\nCompressor station" << endl;
+				fin >> station.nazvan;
+				cout << "CS title: " << station.nazvan << endl;
+				fin >> station.tsekh;
+				cout << "Number of workshops of the CS: " << station.tsekh << endl;
+				fin >> station.tsekh_rab;
+				cout <<  "Number of workshops in operation of the CS: " << station.tsekh_rab << endl;
+				fin >> station.effect;
+				cout <<  "CS efficiency: " << station.effect << endl;
+				fin.close();
+			}
 			break;
 		}
 		case 0:
