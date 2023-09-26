@@ -5,130 +5,148 @@ using namespace std;
 
 struct Truba
 {
-	string otmetka = "none";
-	double dlina = 0;
+	string mark = "None";
+	double length = 0;
 	int diameter = 0;
-	bool remont = false;
+	bool repair = false;
 };
 
 struct CS
 {
-	string nazvan = "none";
-	int tsekh = 0;
-	int tsekh_rab = 0;
-	char effect = 'A';
+	string name = "None";
+	int shops = 0;
+	int work_shops = 0;
+	char efficiency = 'F';
 };
 
-int proverka_int(int& chislo)
+int check_int(int& digit)
 {
-	cin >> chislo;
-	while (cin.fail()) {
+	cin >> digit;
+	while (cin.fail() || cin.peek() != '\n' || digit <= 0)
+	{
 		cin.clear();
 		cin.ignore(100000, '\n');
-		cout << "\nEnter data of type integer!\n";
-		cin >> chislo;
+		cout << "\nEnter data of type integer greater then 0!\n";
+		cin >> digit;
 	}
-	return chislo;
+	return digit;
 }
 
-string proverka_str(string& stroka)
+int check_case(int& digit_case)
 {
-	cin >> stroka;
-	while (cin.fail()) {
+	cin >> digit_case;
+	while (cin.fail() || cin.peek() != '\n' || digit_case < 0 || digit_case > 7)
+	{
 		cin.clear();
 		cin.ignore(100000, '\n');
-		cout << "\nEnter string data!\n";
-		cin >> stroka;
+		cout << "\nEnter a number from 0 to 7!\n";
+		cin >> digit_case;
 	}
-	return stroka;
+	return digit_case;
 }
 
-double proverka_doub(double& doub)
+double check_doub(double& dual)
 {
-	cin >> doub;
-	while (cin.fail()) {
+	cin >> dual;
+	while (cin.fail() || cin.peek() != '\n' || dual <= 0)
+	{
 		cin.clear();
 		cin.ignore(100000, '\n');
-		cout << "\nEnter double data!\n";
-		cin >> doub;
+		cout << "\nEnter double data greater then 0!!\n";
+		cin >> dual;
 	}
-	return doub;
+	return dual;
 }
 
-bool proverka_bool(bool& bob)
+bool check_bool(bool& boolean)
 {
-	cin >> bob;
-	while (cin.fail()) {
+	cin >> boolean;
+	while (cin.fail() || cin.peek() != '\n')
+	{
 		cin.clear();
 		cin.ignore(100000, '\n');
 		cout << "\nEnter bool data!\n";
-		cin >> bob;
+		cin >> boolean;
 	}
-	return bob;
+	return boolean;
 }
 
-char proverka_char(char& symbol)
+char check_char(char& symbol)
 {
 	cin >> symbol;
-	while (cin.fail()) {
+	while (cin.fail() || cin.peek() != '\n' || (symbol < 'A') || (symbol > 'F'))
+	{
 		cin.clear();
 		cin.ignore(100000, '\n');
-		cout << "\nEnter data of type  char!\n";
+		cout << "\nEnter data of type char from 'A' to 'F'!\n";
 		cin >> symbol;
 	}
 	return symbol;
 }
 
-Truba CreateTruba()
+Truba CreatePipe()
 {
 	Truba tb;
 	cout << "Enter pipe elevation: ";
-	proverka_str(tb.otmetka);
-	//cin >> tb.otmetka;
+	cin >> (tb.mark);
 	cout << "Enter pipe length: ";
-	proverka_doub(tb.dlina);
-	//cin >> tb.dlina;
+	check_doub(tb.length);
 	cout << "Enter pipe diameter: ";
-	proverka_int(tb.diameter);
-	//cin >> tb.diametr;
+	check_int(tb.diameter);
 	cout << "Enter the pipe attribute: ";
-	proverka_bool(tb.remont);
-	//cin >> tb.remont;
+	check_bool(tb.repair);
 	return tb;
 };
 
 CS CreateCS()
 {
-	CS cc;
+	CS cs;
 	cout << "Enter the title: ";
-	proverka_str(cc.nazvan);
-	//cin >> cc.nazvan;
+	cin >> (cs.name);
 	cout << "Enter the number of workshops: ";
-	proverka_int(cc.tsekh);
-	//cin >> cc.tsekh;
+	check_int(cs.shops);
 	cout << "Enter the number of workshops in operation: ";
-	proverka_int(cc.tsekh_rab);
-	//cin >> cc.tsekh_rab;
+	check_int(cs.work_shops);
+	while (cs.work_shops > cs.shops)
+	{
+		cout << "The number of workstations cannot exceed the number of all stations!" << endl;
+		check_int(cs.work_shops);
+	}
 	cout << "Enter efficiency: ";
-	proverka_char(cc.effect);
-	//cin >> cc.effect;
-	return cc;
+	check_char(cs.efficiency);
+	return cs;
 };
 
-void PrintTruba(Truba tr)
+void PrintTruba(Truba tb)
 {
-	cout << "Pipe elevation: " << tr.otmetka
-		<< "\nPipe length: " << tr.dlina
-		<< "\nPipe diameter: " << tr.diameter
-		<< "\nThe pipe attribute: " << tr.remont << endl;
+	if (tb.mark == "None")
+	{
+		cout << "\nNo pipes added." << endl;
+	}
+	else
+	{
+		cout << "\nPipe" << endl;
+		cout << "Pipe elevation: " << tb.mark
+			<< "\nPipe length: " << tb.length
+			<< "\nPipe diameter: " << tb.diameter
+			<< "\nThe pipe attribute: " << tb.repair << endl;
+	}
 };
 
-void PrintCS(CS ks)
+void PrintCS(CS cs)
 {
-	cout << "Title: " << ks.nazvan
-		<< "\nEnter the number of workshops: " << ks.tsekh
-		<< "\nEnter the number of workshops in operation: " << ks.tsekh_rab
-		<< "\nEnter efficiency: " << ks.effect << endl;
+	if (cs.name == "None")
+	{
+		cout << "\nNo added compressor stations." << endl;
+	}
+	else
+	{
+		cout << "\nCompressor station" << endl;
+		cout << "Title: " << cs.name
+			<< "\nEnter the number of workshops: " << cs.shops
+			<< "\nEnter the number of workshops in operation: " << cs.work_shops
+			<< "\nEnter efficiency: " << cs.efficiency << endl;
+	}
 };
 
 int main()
@@ -146,16 +164,16 @@ int main()
 			<< "\n7. Download;"
 			<< "\n0. Exit." << endl;
 
-		int number = 0;
+		int number = -1;
 		cout << "\nSelect: ";
 
-		proverka_int(number);
+		check_case(number);
 
 		switch (number)
 		{
 		case 1:
 		{
-			pipe = CreateTruba();
+			pipe = CreatePipe();
 			break;
 		}
 		case 2:
@@ -166,24 +184,39 @@ int main()
 		case 3:
 		{
 			cout << "\All objects: " << endl;
-			cout << "\nPipe" << endl;
 			PrintTruba(pipe);
-			cout << "\nCompressor station" << endl;
 			PrintCS(station);
 			break;
 		}
 		case 4:
 		{
-			cout << "Change the sign 'in repair': ";
-			proverka_bool(pipe.remont);
-			//cin >> pipe.remont;
+			if (pipe.mark == "None")
+			{
+				cout << "You don't have added pipe" << endl;
+			}
+			else
+			{
+				cout << "Change the sign 'in repair': ";
+				check_bool(pipe.repair);
+			}
 			break;
 		}
 		case 5:
 		{
-			cout << "Change the number of workshops in operation: ";
-			proverka_int(station.tsekh_rab);
-			//cin >> station.tsekh_rab;
+			if (station.name == "None" )
+			{
+				cout << "You don't have added CS" << endl;
+			}
+			else
+			{
+				cout << "Change the number of workshops in operation: ";
+				check_int(station.work_shops);
+				while (station.work_shops > station.shops)
+				{
+					cout << "The number of workstations cannot exceed the number of all stations!" << endl;
+					check_int(station.work_shops);
+				}
+			}
 			break;
 		}
 		case 6:
@@ -192,14 +225,14 @@ int main()
 			ofstream fout("data");
 			if (fout)
 			{
-				fout << pipe.otmetka << endl;
-				fout << pipe.dlina << endl;
+				fout << pipe.mark << endl;
+				fout << pipe.length << endl;
 				fout << pipe.diameter << endl;
-				fout << pipe.remont << endl;
-				fout << station.nazvan << endl;
-				fout << station.tsekh << endl;
-				fout << station.tsekh_rab << endl;
-				fout << station.effect << endl;
+				fout << pipe.repair << endl;
+				fout << station.name << endl;
+				fout << station.shops << endl;
+				fout << station.work_shops << endl;
+				fout << station.efficiency << endl;
 				fout.close();
 			}
 			break;
@@ -211,23 +244,23 @@ int main()
 			if (fin)
 			{
 				cout << "Pipe" << endl;
-				fin >> pipe.otmetka;
-				cout << "Pipe elevation: " << pipe.otmetka << endl;
-				fin >> pipe.dlina;
-				cout <<  "Pipe length: " << pipe.dlina << endl;
+				fin >> pipe.mark;
+				cout << "Pipe elevation: " << pipe.mark << endl;
+				fin >> pipe.length;
+				cout <<  "Pipe length: " << pipe.length << endl;
 				fin >> pipe.diameter;
 				cout << "Pipe diameter: " << pipe.diameter << endl;
-				fin >> pipe.remont;
-				cout <<  "The pipe attribute: " << pipe.remont << endl;
+				fin >> pipe.repair;
+				cout <<  "The pipe attribute: " << pipe.repair << endl;
 				cout << "\nCompressor station" << endl;
-				fin >> station.nazvan;
-				cout << "CS title: " << station.nazvan << endl;
-				fin >> station.tsekh;
-				cout << "Number of workshops of the CS: " << station.tsekh << endl;
-				fin >> station.tsekh_rab;
-				cout <<  "Number of workshops in operation of the CS: " << station.tsekh_rab << endl;
-				fin >> station.effect;
-				cout <<  "CS efficiency: " << station.effect << endl;
+				fin >> station.name;
+				cout << "CS title: " << station.name << endl;
+				fin >> station.shops;
+				cout << "Number of workshops of the CS: " << station.shops << endl;
+				fin >> station.work_shops;
+				cout <<  "Number of workshops in operation of the CS: " << station.work_shops << endl;
+				fin >> station.efficiency;
+				cout <<  "CS efficiency: " << station.efficiency << endl;
 				fin.close();
 			}
 			break;
