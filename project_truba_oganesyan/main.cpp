@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <fstream>
 
 using namespace std;
@@ -88,7 +89,8 @@ Truba CreatePipe()
 {
 	Truba tb;
 	cout << "Enter pipe elevation: ";
-	cin >> (tb.mark);
+	cin.ignore();
+	getline(cin, tb.mark);
 	cout << "Enter pipe length: ";
 	check_doub(tb.length);
 	cout << "Enter pipe diameter: ";
@@ -102,7 +104,8 @@ CS CreateCS()
 {
 	CS cs;
 	cout << "Enter the title: ";
-	cin >> (cs.name);
+	cin.ignore();
+	getline(cin, cs.name);
 	cout << "Enter the number of workshops: ";
 	check_int(cs.shops);
 	cout << "Enter the number of workshops in operation: ";
@@ -149,6 +152,95 @@ void PrintCS(CS cs)
 	}
 };
 
+void DataRecording(Truba trb, CS drcs)
+{
+	ofstream fout("data");
+	if (trb.mark == "None")
+	{
+		cout << "No pipe data to record." << endl;
+	}
+	else
+	{
+		cout << "Data about pipe written to file." << endl;
+		if (fout)
+		{
+			fout << "Pipe" << endl;
+			fout << trb.mark << endl;
+			fout << trb.length << endl;
+			fout << trb.diameter << endl;
+			fout << trb.repair << endl;
+		}
+	}
+	if (drcs.name == "None")
+	{
+		cout << "No CS data to record." << endl;
+	}
+	else
+	{
+		if (fout)
+		{
+			cout << "Data about CS written to file." << endl;
+			fout << "Compressor station" << endl;
+			fout << drcs.name << endl;
+			fout << drcs.shops << endl;
+			fout << drcs.work_shops << endl;
+			fout << drcs.efficiency << endl;
+		}
+	}
+	fout.close();
+}
+
+void DataReceiving(Truba& trb, CS& drcs)
+{
+	ifstream fin("data");
+	if (fin)
+	{
+		string pipe_or_cs_name = "no";
+		int p = 0;
+		int s = 0;
+		while (getline(fin, pipe_or_cs_name))
+		{
+			if (pipe_or_cs_name == "Pipe")
+			{
+				cout << "Data received from file about pipe:" << endl;
+				cout << "\nPipe" << endl;
+				getline(fin, trb.mark);
+				cout << "Pipe elevation: " << trb.mark << endl;
+				fin >> trb.length;
+				cout << "Pipe length: " << trb.length << endl;
+				fin >> trb.diameter;
+				cout << "Pipe diameter: " << trb.diameter << endl;
+				fin >> trb.repair;
+				cout << "The pipe attribute: " << trb.repair << endl;
+				p += 1;
+			}
+			if (pipe_or_cs_name == "Compressor station")
+			{
+				cout << "Data received from file about CS:" << endl;
+				cout << "\nCompressor station" << endl;
+				getline(fin, drcs.name);
+				cout << "CS title: " << drcs.name << endl;
+				fin >> drcs.shops;
+				cout << "Number of workshops of the CS: " << drcs.shops << endl;
+				fin >> drcs.work_shops;
+				cout << "Number of workshops in operation of the CS: " << drcs.work_shops << endl;
+				fin >> drcs.efficiency;
+				cout << "CS efficiency: " << drcs.efficiency << endl;
+				s += 1;
+			}
+		}
+		if (p == 0)
+		{
+			cout << "No information about pipe." << endl;
+		}
+		if (s == 0)
+		{
+			cout << "No information about station." << endl;
+		}
+		fin.close();
+	}
+}
+
 int main()
 {
 	Truba pipe;
@@ -192,7 +284,7 @@ int main()
 		{
 			if (pipe.mark == "None")
 			{
-				cout << "You don't have added pipe" << endl;
+				cout << "You don't have added pipe." << endl;
 			}
 			else
 			{
@@ -203,9 +295,9 @@ int main()
 		}
 		case 5:
 		{
-			if (station.name == "None" )
+			if (station.name == "None")
 			{
-				cout << "You don't have added CS" << endl;
+				cout << "You don't have added CS." << endl;
 			}
 			else
 			{
@@ -221,48 +313,12 @@ int main()
 		}
 		case 6:
 		{
-			cout << "Data written to file." << endl;
-			ofstream fout("data");
-			if (fout)
-			{
-				fout << pipe.mark << endl;
-				fout << pipe.length << endl;
-				fout << pipe.diameter << endl;
-				fout << pipe.repair << endl;
-				fout << station.name << endl;
-				fout << station.shops << endl;
-				fout << station.work_shops << endl;
-				fout << station.efficiency << endl;
-				fout.close();
-			}
+			DataRecording(pipe, station);
 			break;
 		}
 		case 7:
 		{
-			cout << "Data received from file:\n" << endl;
-			ifstream fin("data");
-			if (fin)
-			{
-				cout << "Pipe" << endl;
-				fin >> pipe.mark;
-				cout << "Pipe elevation: " << pipe.mark << endl;
-				fin >> pipe.length;
-				cout <<  "Pipe length: " << pipe.length << endl;
-				fin >> pipe.diameter;
-				cout << "Pipe diameter: " << pipe.diameter << endl;
-				fin >> pipe.repair;
-				cout <<  "The pipe attribute: " << pipe.repair << endl;
-				cout << "\nCompressor station" << endl;
-				fin >> station.name;
-				cout << "CS title: " << station.name << endl;
-				fin >> station.shops;
-				cout << "Number of workshops of the CS: " << station.shops << endl;
-				fin >> station.work_shops;
-				cout <<  "Number of workshops in operation of the CS: " << station.work_shops << endl;
-				fin >> station.efficiency;
-				cout <<  "CS efficiency: " << station.efficiency << endl;
-				fin.close();
-			}
+			DataReceiving(pipe, station);
 			break;
 		}
 		case 0:
