@@ -20,7 +20,7 @@ struct CS
 	char efficiency = 'F';
 };
 
-int check_int(int& digit)
+void check_int(int& digit)
 {
 	cin >> digit;
 	while (cin.fail() || cin.peek() != '\n' || digit <= 0)
@@ -30,36 +30,21 @@ int check_int(int& digit)
 		cout << "\nEnter data of type integer greater then 0!\n";
 		cin >> digit;
 	}
-	return digit;
 }
 
-int check_case(int& digit_case)
-{
-	cin >> digit_case;
-	while (cin.fail() || cin.peek() != '\n' || digit_case < 0 || digit_case > 7)
-	{
-		cin.clear();
-		cin.ignore(100000, '\n');
-		cout << "\nEnter a number from 0 to 7!\n";
-		cin >> digit_case;
-	}
-	return digit_case;
-}
-
-double check_doub(double& dual)
+void check_doub(double& dual)
 {
 	cin >> dual;
 	while (cin.fail() || cin.peek() != '\n' || dual <= 0)
 	{
 		cin.clear();
 		cin.ignore(100000, '\n');
-		cout << "\nEnter double data greater then 0!!\n";
+		cout << "\nEnter double data greater then 0!\n";
 		cin >> dual;
 	}
-	return dual;
 }
 
-bool check_bool(bool& boolean)
+void check_bool(bool& boolean)
 {
 	cin >> boolean;
 	while (cin.fail() || cin.peek() != '\n')
@@ -69,10 +54,9 @@ bool check_bool(bool& boolean)
 		cout << "\nEnter bool data!\n";
 		cin >> boolean;
 	}
-	return boolean;
 }
 
-char check_char(char& symbol)
+void check_char(char& symbol)
 {
 	cin >> symbol;
 	while (cin.fail() || cin.peek() != '\n' || (symbol < 'A') || (symbol > 'F'))
@@ -82,13 +66,12 @@ char check_char(char& symbol)
 		cout << "\nEnter data of type char from 'A' to 'F'!\n";
 		cin >> symbol;
 	}
-	return symbol;
 }
 
 Truba CreatePipe()
 {
 	Truba tb;
-	cout << "Enter pipe elevation: ";
+	cout << "Enter pipe mark: ";
 	cin.ignore();
 	getline(cin, tb.mark);
 	cout << "Enter pipe length: ";
@@ -120,25 +103,25 @@ CS CreateCS()
 	return cs;
 };
 
-void PrintTruba(Truba tb)
+void PrintPipe(const Truba& tb)
 {
-	if (tb.mark == "None")
+	if (tb.length == 0)
 	{
 		cout << "\nNo pipes added." << endl;
 	}
 	else
 	{
 		cout << "\nPipe" << endl;
-		cout << "Pipe elevation: " << tb.mark
+		cout << "Pipe mark: " << tb.mark
 			<< "\nPipe length: " << tb.length
 			<< "\nPipe diameter: " << tb.diameter
 			<< "\nThe pipe attribute: " << tb.repair << endl;
 	}
 };
 
-void PrintCS(CS cs)
+void PrintCS(const CS& cs)
 {
-	if (cs.name == "None")
+	if (cs.shops == 0)
 	{
 		cout << "\nNo added compressor stations." << endl;
 	}
@@ -152,55 +135,16 @@ void PrintCS(CS cs)
 	}
 };
 
-void DataRecording(Truba trb, CS drcs)
-{
-	ofstream fout("data");
-	if (trb.mark == "None")
-	{
-		cout << "No pipe data to record." << endl;
-	}
-	else
-	{
-		cout << "Data about pipe written to file." << endl;
-		if (fout)
-		{
-			fout << "Pipe" << endl;
-			fout << trb.mark << endl;
-			fout << trb.length << endl;
-			fout << trb.diameter << endl;
-			fout << trb.repair << endl;
-		}
-	}
-	if (drcs.name == "None")
-	{
-		cout << "No CS data to record." << endl;
-	}
-	else
-	{
-		if (fout)
-		{
-			cout << "Data about CS written to file." << endl;
-			fout << "Compressor station" << endl;
-			fout << drcs.name << endl;
-			fout << drcs.shops << endl;
-			fout << drcs.work_shops << endl;
-			fout << drcs.efficiency << endl;
-		}
-	}
-	fout.close();
-}
-
-void DataReceiving(Truba& trb, CS& drcs)
+void DataReceivingPipe(Truba& trb)
 {
 	ifstream fin("data");
 	if (fin)
 	{
-		string pipe_or_cs_name = "no";
+		string pipe_name = "no";
 		int p = 0;
-		int s = 0;
-		while (getline(fin, pipe_or_cs_name))
+		while (getline(fin, pipe_name))
 		{
-			if (pipe_or_cs_name == "Pipe")
+			if (pipe_name == "Pipe")
 			{
 				cout << "Data received from file about pipe:" << endl;
 				cout << "\nPipe" << endl;
@@ -214,7 +158,25 @@ void DataReceiving(Truba& trb, CS& drcs)
 				cout << "The pipe attribute: " << trb.repair << endl;
 				p += 1;
 			}
-			if (pipe_or_cs_name == "Compressor station")
+		}
+		if (p == 0)
+		{
+			cout << "No information about pipe." << endl;
+		}
+		fin.close();
+	}
+}
+
+void DataReceivingCS(CS& drcs)
+{
+	ifstream fin("data");
+	if (fin)
+	{
+		string cs_name = "no";
+		int s = 0;
+		while (getline(fin, cs_name))
+		{
+			if (cs_name == "Compressor station")
 			{
 				cout << "Data received from file about CS:" << endl;
 				cout << "\nCompressor station" << endl;
@@ -229,10 +191,6 @@ void DataReceiving(Truba& trb, CS& drcs)
 				s += 1;
 			}
 		}
-		if (p == 0)
-		{
-			cout << "No information about pipe." << endl;
-		}
 		if (s == 0)
 		{
 			cout << "No information about station." << endl;
@@ -240,6 +198,76 @@ void DataReceiving(Truba& trb, CS& drcs)
 		fin.close();
 	}
 }
+
+void DataRecordingPipe(Truba trb, CS drcs)
+{
+	
+	if (trb.length == 0)
+	{
+		cout << "No pipe data to record." << endl;
+	}
+	else
+	{
+		ofstream fout;
+		if (drcs.shops == 0)
+		{
+			fout.open("data");
+		}
+		else
+		{
+			fout.open("data");
+		}
+		cout << "Data about pipe written to file." << endl;
+		if (fout)
+		{
+			fout << "Pipe" << endl;
+			fout << trb.mark << endl;
+			fout << trb.length << endl;
+			fout << trb.diameter << endl;
+			fout << trb.repair << endl;
+		}
+		fout.close();
+	}
+	
+}
+
+void DataRecordingCS(Truba trb, CS drcs)
+{
+
+	if (drcs.shops == 0)
+	{
+		cout << "No CS data to record." << endl;
+	}
+	else
+	{
+		ofstream fout;
+		if (trb.length == 0)
+		{
+			fout.open("data");
+		}
+		else
+		{
+			fout.open("data", ios::app);
+		}
+		if (fout)
+		{
+			cout << "Data about CS written to file." << endl;
+			fout << "Compressor station" << endl;
+			fout << drcs.name << endl;
+			fout << drcs.shops << endl;
+			fout << drcs.work_shops << endl;
+			fout << drcs.efficiency << endl;
+		}
+		fout.close();
+	}
+
+}
+
+
+
+
+
+
 
 int main()
 {
@@ -254,12 +282,12 @@ int main()
 			<< "\n5. Edit compressor station;"
 			<< "\n6. Save;"
 			<< "\n7. Download;"
-			<< "\n0. Exit." << endl;
+			<< "\n8. Exit." << endl;
 
 		int number = -1;
 		cout << "\nSelect: ";
 
-		check_case(number);
+		check_int(number);
 
 		switch (number)
 		{
@@ -276,13 +304,13 @@ int main()
 		case 3:
 		{
 			cout << "\All objects: " << endl;
-			PrintTruba(pipe);
+			PrintPipe(pipe);
 			PrintCS(station);
 			break;
 		}
 		case 4:
 		{
-			if (pipe.mark == "None")
+			if (pipe.length == 0)
 			{
 				cout << "You don't have added pipe." << endl;
 			}
@@ -295,7 +323,7 @@ int main()
 		}
 		case 5:
 		{
-			if (station.name == "None")
+			if (station.shops == 0)
 			{
 				cout << "You don't have added CS." << endl;
 			}
@@ -313,21 +341,23 @@ int main()
 		}
 		case 6:
 		{
-			DataRecording(pipe, station);
+			DataRecordingPipe(pipe, station);
+			DataRecordingCS(pipe, station);
 			break;
 		}
 		case 7:
 		{
-			DataReceiving(pipe, station);
+			DataReceivingPipe(pipe);
+			DataReceivingCS(station);
 			break;
 		}
-		case 0:
+		case 8:
 		{
 			return false;
 		}
 		default:
 		{
-			cout << "Enter a number from 0 to 7!" << endl;
+			cout << "Enter a number from 1 to 8!" << endl;
 			break;
 		}
 		}
