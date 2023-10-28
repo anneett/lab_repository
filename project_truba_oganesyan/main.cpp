@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -20,90 +21,62 @@ struct CS
 	char efficiency = 'F';
 };
 
-void check_int(int& digit)
+template <typename T>
+
+T GetCorrectData(T min, T max)
 {
-	cin >> digit;
-	while (cin.fail() || cin.peek() != '\n' || digit <= 0)
+	T x;
+	while ((cin >> x).fail() || (cin).peek() != '\n' || x < min || x > max)
 	{
 		cin.clear();
 		cin.ignore(100000, '\n');
-		cout << "\nEnter data of type integer greater then 0!\n";
-		cin >> digit;
+		cout << "\nEnter the correct data! Type number (" << min << " - " << max << "):";
+		cout << "\nEnter: ";
 	}
+	return x;
 }
 
-void check_doub(double& dual)
+istream& operator >> (istream& in, Truba& tb)
 {
-	cin >> dual;
-	while (cin.fail() || cin.peek() != '\n' || dual <= 0)
-	{
-		cin.clear();
-		cin.ignore(100000, '\n');
-		cout << "\nEnter double data greater then 0!\n";
-		cin >> dual;
-	}
-}
-
-void check_bool(bool& boolean)
-{
-	cin >> boolean;
-	while (cin.fail() || cin.peek() != '\n')
-	{
-		cin.clear();
-		cin.ignore(100000, '\n');
-		cout << "\nEnter bool data!\n";
-		cin >> boolean;
-	}
-}
-
-void check_char(char& symbol)
-{
-	cin >> symbol;
-	while (cin.fail() || cin.peek() != '\n' || (symbol < 'A') || (symbol > 'F'))
-	{
-		cin.clear();
-		cin.ignore(100000, '\n');
-		cout << "\nEnter data of type char from 'A' to 'F'!\n";
-		cin >> symbol;
-	}
-}
-
-Truba CreatePipe()
-{
-	Truba tb;
 	cout << "Enter pipe mark: ";
 	cin.ignore();
 	getline(cin, tb.mark);
 	cout << "Enter pipe length: ";
-	check_doub(tb.length);
+	tb.length = GetCorrectData(0.0, 10000.0);
+	//check_doub(tb.length);
 	cout << "Enter pipe diameter: ";
-	check_int(tb.diameter);
+	tb.diameter = GetCorrectData(500, 1400);
+	//check_int(tb.diameter);
 	cout << "Enter the pipe attribute: ";
-	check_bool(tb.repair);
-	return tb;
-};
+	tb.repair = GetCorrectData(0, 1);
+	//check_bool(tb.repair);
+	return in;
+}
 
-CS CreateCS()
+istream& operator >> (istream& in, CS& cs)
 {
-	CS cs;
 	cout << "Enter the title: ";
 	cin.ignore();
 	getline(cin, cs.name);
 	cout << "Enter the number of workshops: ";
-	check_int(cs.shops);
+	cs.shops = GetCorrectData(1, 1000);
+	//check_int(cs.shops);
 	cout << "Enter the number of workshops in operation: ";
-	check_int(cs.work_shops);
+	cs.work_shops = GetCorrectData(0, 1000);
+	//check_int(cs.work_shops);
 	while (cs.work_shops > cs.shops)
 	{
 		cout << "The number of workstations cannot exceed the number of all stations!" << endl;
-		check_int(cs.work_shops);
+		cs.work_shops = GetCorrectData(0, 1000);
+		//check_int(cs.work_shops);
 	}
 	cout << "Enter efficiency: ";
-	check_char(cs.efficiency);
-	return cs;
-};
+	cs.efficiency = GetCorrectData('A', 'F');
+	//check_char(cs.efficiency);
+	return in;
+}
 
-void PrintPipe(const Truba& tb)
+ostream& operator << (ostream& out, const Truba& tb)
 {
 	if (tb.length == 0)
 	{
@@ -117,9 +90,10 @@ void PrintPipe(const Truba& tb)
 			<< "\nPipe diameter: " << tb.diameter
 			<< "\nThe pipe attribute: " << tb.repair << endl;
 	}
-};
+	return out;
+}
 
-void PrintCS(const CS& cs)
+ostream& operator << (ostream& out, const CS& cs)
 {
 	if (cs.shops == 0)
 	{
@@ -133,7 +107,123 @@ void PrintCS(const CS& cs)
 			<< "\nEnter the number of workshops in operation: " << cs.work_shops
 			<< "\nEnter efficiency: " << cs.efficiency << endl;
 	}
-};
+	return out;
+}
+
+//void check_int(int& digit)
+//{
+//	cin >> digit;
+//	while (cin.fail() || cin.peek() != '\n' || digit <= 0)
+//	{
+//		cin.clear();
+//		cin.ignore(100000, '\n');
+//		cout << "\nEnter data of type integer greater then 0!\n";
+//		cin >> digit;
+//	}
+//}
+//
+//void check_doub(double& dual)
+//{
+//	cin >> dual;
+//	while (cin.fail() || cin.peek() != '\n' || dual <= 0)
+//	{
+//		cin.clear();
+//		cin.ignore(100000, '\n');
+//		cout << "\nEnter double data greater then 0!\n";
+//		cin >> dual;
+//	}
+//}
+//
+//void check_bool(bool& boolean)
+//{
+//	cin >> boolean;
+//	while (cin.fail() || cin.peek() != '\n')
+//	{
+//		cin.clear();
+//		cin.ignore(100000, '\n');
+//		cout << "\nEnter bool data!\n";
+//		cin >> boolean;
+//	}
+//}
+//
+//void check_char(char& symbol)
+//{
+//	cin >> symbol;
+//	while (cin.fail() || cin.peek() != '\n' || (symbol < 'A') || (symbol > 'F'))
+//	{
+//		cin.clear();
+//		cin.ignore(100000, '\n');
+//		cout << "\nEnter data of type char from 'A' to 'F'!\n";
+//		cin >> symbol;
+//	}
+//}
+
+//Truba CreatePipe()
+//{
+//	Truba tb;
+//	cout << "Enter pipe mark: ";
+//	cin.ignore();
+//	getline(cin, tb.mark);
+//	cout << "Enter pipe length: ";
+//	check_doub(tb.length);
+//	cout << "Enter pipe diameter: ";
+//	check_int(tb.diameter);
+//	cout << "Enter the pipe attribute: ";
+//	check_bool(tb.repair);
+//	return tb;
+//};
+//
+//CS CreateCS()
+//{
+//	CS cs;
+//	cout << "Enter the title: ";
+//	cin.ignore();
+//	getline(cin, cs.name);
+//	cout << "Enter the number of workshops: ";
+//	check_int(cs.shops);
+//	cout << "Enter the number of workshops in operation: ";
+//	check_int(cs.work_shops);
+//	while (cs.work_shops > cs.shops)
+//	{
+//		cout << "The number of workstations cannot exceed the number of all stations!" << endl;
+//		check_int(cs.work_shops);
+//	}
+//	cout << "Enter efficiency: ";
+//	check_char(cs.efficiency);
+//	return cs;
+//};
+//
+//void PrintPipe(const Truba& tb)
+//{
+//	if (tb.length == 0)
+//	{
+//		cout << "\nNo pipes added." << endl;
+//	}
+//	else
+//	{
+//		cout << "\nPipe" << endl;
+//		cout << "Pipe mark: " << tb.mark
+//			<< "\nPipe length: " << tb.length
+//			<< "\nPipe diameter: " << tb.diameter
+//			<< "\nThe pipe attribute: " << tb.repair << endl;
+//	}
+//};
+//
+//void PrintCS(const CS& cs)
+//{
+//	if (cs.shops == 0)
+//	{
+//		cout << "\nNo added compressor stations." << endl;
+//	}
+//	else
+//	{
+//		cout << "\nCompressor station" << endl;
+//		cout << "Title: " << cs.name
+//			<< "\nEnter the number of workshops: " << cs.shops
+//			<< "\nEnter the number of workshops in operation: " << cs.work_shops
+//			<< "\nEnter efficiency: " << cs.efficiency << endl;
+//	}
+//};
 
 void DataReceivingPipe(Truba& trb)
 {
@@ -263,16 +353,12 @@ void DataRecordingCS(Truba trb, CS drcs)
 
 }
 
-
-
-
-
-
-
 int main()
 {
 	Truba pipe;
 	CS station;
+	/*unordered_map <int, Truba> pipes;
+	unordered_map <int, CS> stations;*/
 	while (true) {
 		cout << "\nSelect menu item: "
 			<< "\n1. Add pipe;"
@@ -287,25 +373,33 @@ int main()
 		int number = -1;
 		cout << "\nSelect: ";
 
-		check_int(number);
+		number = GetCorrectData(1, 8);
+		//check_int(number);
+		int max_id = 0;
 
 		switch (number)
 		{
 		case 1:
 		{
-			pipe = CreatePipe();
+			//Truba pipe;
+			cin >> pipe;
+			//pipes.insert(max_id++, pipe);
+			//pipe = CreatePipe();
 			break;
 		}
 		case 2:
 		{
-			station = CreateCS();
+			cin >> station;
+			//station = CreateCS();
 			break;
 		}
 		case 3:
 		{
 			cout << "\All objects: " << endl;
-			PrintPipe(pipe);
-			PrintCS(station);
+			//PrintPipe(pipe);
+			cout << pipe;
+			//PrintCS(station);
+			cout << station;
 			break;
 		}
 		case 4:
@@ -317,7 +411,8 @@ int main()
 			else
 			{
 				cout << "Change the sign 'in repair': ";
-				check_bool(pipe.repair);
+				pipe.repair = GetCorrectData(0, 1);
+				//check_bool(pipe.repair);
 			}
 			break;
 		}
@@ -330,11 +425,13 @@ int main()
 			else
 			{
 				cout << "Change the number of workshops in operation: ";
-				check_int(station.work_shops);
+				station.work_shops = GetCorrectData(0, 1000);
+				//check_int(station.work_shops);
 				while (station.work_shops > station.shops)
 				{
 					cout << "The number of workstations cannot exceed the number of all stations!" << endl;
-					check_int(station.work_shops);
+					station.work_shops = GetCorrectData(0, 1000);
+					//check_int(station.work_shops);
 				}
 			}
 			break;
