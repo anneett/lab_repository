@@ -2,27 +2,15 @@
 #include <string>
 #include <fstream>
 #include <unordered_map>
+#include "Truba.h"
+#include "CS.h"
 
 using namespace std;
 
-struct Truba
-{
-	string mark = "None";
-	double length = 0;
-	int diameter = 0;
-	bool repair = false;
-};
-
-struct CS
-{
-	string name = "None";
-	int shops = 0;
-	int work_shops = 0;
-	char efficiency = 'F';
-};
+unordered_map <int, Truba> pipes;
+unordered_map <int, CS> stations;
 
 template <typename T>
-
 T GetCorrectData(T min, T max)
 {
 	T x;
@@ -33,6 +21,7 @@ T GetCorrectData(T min, T max)
 		cout << "\nEnter the correct data! Type number (" << min << " - " << max << "):";
 		cout << "\nEnter: ";
 	}
+	cout << "proverka na tip dannix" << endl;
 	return x;
 }
 
@@ -43,13 +32,10 @@ istream& operator >> (istream& in, Truba& tb)
 	getline(cin, tb.mark);
 	cout << "Enter pipe length: ";
 	tb.length = GetCorrectData(0.0, 10000.0);
-	//check_doub(tb.length);
 	cout << "Enter pipe diameter: ";
 	tb.diameter = GetCorrectData(500, 1400);
-	//check_int(tb.diameter);
 	cout << "Enter the pipe attribute: ";
 	tb.repair = GetCorrectData(0, 1);
-	//check_bool(tb.repair);
 	return in;
 }
 
@@ -60,19 +46,15 @@ istream& operator >> (istream& in, CS& cs)
 	getline(cin, cs.name);
 	cout << "Enter the number of workshops: ";
 	cs.shops = GetCorrectData(1, 1000);
-	//check_int(cs.shops);
 	cout << "Enter the number of workshops in operation: ";
 	cs.work_shops = GetCorrectData(0, 1000);
-	//check_int(cs.work_shops);
 	while (cs.work_shops > cs.shops)
 	{
 		cout << "The number of workstations cannot exceed the number of all stations!" << endl;
 		cs.work_shops = GetCorrectData(0, 1000);
-		//check_int(cs.work_shops);
 	}
 	cout << "Enter efficiency: ";
 	cs.efficiency = GetCorrectData('A', 'F');
-	//check_char(cs.efficiency);
 	return in;
 }
 
@@ -90,6 +72,7 @@ ostream& operator << (ostream& out, const Truba& tb)
 			<< "\nPipe diameter: " << tb.diameter
 			<< "\nThe pipe attribute: " << tb.repair << endl;
 	}
+	cout << "ofstream with no pipes" << endl;
 	return out;
 }
 
@@ -110,120 +93,21 @@ ostream& operator << (ostream& out, const CS& cs)
 	return out;
 }
 
-//void check_int(int& digit)
-//{
-//	cin >> digit;
-//	while (cin.fail() || cin.peek() != '\n' || digit <= 0)
-//	{
-//		cin.clear();
-//		cin.ignore(100000, '\n');
-//		cout << "\nEnter data of type integer greater then 0!\n";
-//		cin >> digit;
-//	}
-//}
-//
-//void check_doub(double& dual)
-//{
-//	cin >> dual;
-//	while (cin.fail() || cin.peek() != '\n' || dual <= 0)
-//	{
-//		cin.clear();
-//		cin.ignore(100000, '\n');
-//		cout << "\nEnter double data greater then 0!\n";
-//		cin >> dual;
-//	}
-//}
-//
-//void check_bool(bool& boolean)
-//{
-//	cin >> boolean;
-//	while (cin.fail() || cin.peek() != '\n')
-//	{
-//		cin.clear();
-//		cin.ignore(100000, '\n');
-//		cout << "\nEnter bool data!\n";
-//		cin >> boolean;
-//	}
-//}
-//
-//void check_char(char& symbol)
-//{
-//	cin >> symbol;
-//	while (cin.fail() || cin.peek() != '\n' || (symbol < 'A') || (symbol > 'F'))
-//	{
-//		cin.clear();
-//		cin.ignore(100000, '\n');
-//		cout << "\nEnter data of type char from 'A' to 'F'!\n";
-//		cin >> symbol;
-//	}
-//}
+Truba& SelectTruba(unordered_map <int, Truba>& p)
+{
+	cout << "Enter index of pipe: ";
+	unsigned int index = GetCorrectData(0u, unsigned int (p.size())-1);
+	cout << "return index??" << endl;
+	return p[index];
+}
 
-//Truba CreatePipe()
-//{
-//	Truba tb;
-//	cout << "Enter pipe mark: ";
-//	cin.ignore();
-//	getline(cin, tb.mark);
-//	cout << "Enter pipe length: ";
-//	check_doub(tb.length);
-//	cout << "Enter pipe diameter: ";
-//	check_int(tb.diameter);
-//	cout << "Enter the pipe attribute: ";
-//	check_bool(tb.repair);
-//	return tb;
-//};
-//
-//CS CreateCS()
-//{
-//	CS cs;
-//	cout << "Enter the title: ";
-//	cin.ignore();
-//	getline(cin, cs.name);
-//	cout << "Enter the number of workshops: ";
-//	check_int(cs.shops);
-//	cout << "Enter the number of workshops in operation: ";
-//	check_int(cs.work_shops);
-//	while (cs.work_shops > cs.shops)
-//	{
-//		cout << "The number of workstations cannot exceed the number of all stations!" << endl;
-//		check_int(cs.work_shops);
-//	}
-//	cout << "Enter efficiency: ";
-//	check_char(cs.efficiency);
-//	return cs;
-//};
-//
-//void PrintPipe(const Truba& tb)
-//{
-//	if (tb.length == 0)
-//	{
-//		cout << "\nNo pipes added." << endl;
-//	}
-//	else
-//	{
-//		cout << "\nPipe" << endl;
-//		cout << "Pipe mark: " << tb.mark
-//			<< "\nPipe length: " << tb.length
-//			<< "\nPipe diameter: " << tb.diameter
-//			<< "\nThe pipe attribute: " << tb.repair << endl;
-//	}
-//};
-//
-//void PrintCS(const CS& cs)
-//{
-//	if (cs.shops == 0)
-//	{
-//		cout << "\nNo added compressor stations." << endl;
-//	}
-//	else
-//	{
-//		cout << "\nCompressor station" << endl;
-//		cout << "Title: " << cs.name
-//			<< "\nEnter the number of workshops: " << cs.shops
-//			<< "\nEnter the number of workshops in operation: " << cs.work_shops
-//			<< "\nEnter efficiency: " << cs.efficiency << endl;
-//	}
-//};
+CS& SelectCS(unordered_map <int, CS>& s)
+{
+	cout << "Enter index of station: ";
+	unsigned int index = GetCorrectData(0u, unsigned int (s.size()) - 1);
+	return s[index];
+}
+
 
 void DataReceivingPipe(Truba& trb)
 {
@@ -355,10 +239,6 @@ void DataRecordingCS(Truba trb, CS drcs)
 
 int main()
 {
-	Truba pipe;
-	CS station;
-	/*unordered_map <int, Truba> pipes;
-	unordered_map <int, CS> stations;*/
 	while (true) {
 		cout << "\nSelect menu item: "
 			<< "\n1. Add pipe;"
@@ -374,80 +254,79 @@ int main()
 		cout << "\nSelect: ";
 
 		number = GetCorrectData(1, 8);
-		//check_int(number);
-		int max_id = 0;
-
+		int max_idp = 0;
+		int max_ids = 0;
 		switch (number)
 		{
 		case 1:
 		{
-			//Truba pipe;
+			Truba pipe;
 			cin >> pipe;
-			//pipes.insert(max_id++, pipe);
-			//pipe = CreatePipe();
+			pipes.insert({ max_idp++, pipe });
+			cout << "vivod id dobavlennoy trubi" << max_idp << endl;
 			break;
 		}
 		case 2:
 		{
+			CS station;
 			cin >> station;
-			//station = CreateCS();
+			stations.insert({ max_ids++, station });
 			break;
 		}
 		case 3:
 		{
 			cout << "\All objects: " << endl;
-			//PrintPipe(pipe);
-			cout << pipe;
-			//PrintCS(station);
-			cout << station;
+			cout << SelectTruba(pipes) << endl;
+			cout << "case 3 " << endl;
+			cout << SelectCS(stations) << endl;
 			break;
 		}
-		case 4:
-		{
-			if (pipe.length == 0)
-			{
-				cout << "You don't have added pipe." << endl;
-			}
-			else
-			{
-				cout << "Change the sign 'in repair': ";
-				pipe.repair = GetCorrectData(0, 1);
-				//check_bool(pipe.repair);
-			}
-			break;
-		}
-		case 5:
-		{
-			if (station.shops == 0)
-			{
-				cout << "You don't have added CS." << endl;
-			}
-			else
-			{
-				cout << "Change the number of workshops in operation: ";
-				station.work_shops = GetCorrectData(0, 1000);
-				//check_int(station.work_shops);
-				while (station.work_shops > station.shops)
-				{
-					cout << "The number of workstations cannot exceed the number of all stations!" << endl;
-					station.work_shops = GetCorrectData(0, 1000);
-					//check_int(station.work_shops);
-				}
-			}
-			break;
-		}
-		case 6:
-		{
-			DataRecordingPipe(pipe, station);
-			DataRecordingCS(pipe, station);
-			break;
-		}
-		case 7:
-		{
-			DataReceivingPipe(pipe);
-			DataReceivingCS(station);
-			break;
-		}
+		//case 4:
+		//{
+		//	if (pipe.length == 0)
+		//	{
+		//		cout << "You don't have added pipe." << endl;
+		//	}
+		//	else
+		//	{
+		//		cout << "Change the sign 'in repair': ";
+		//		pipe.repair = GetCorrectData(0, 1);
+		//		//check_bool(pipe.repair);
+		//	}
+		//	break;
+		//}
+		//case 5:
+		//{
+		//	if (station.shops == 0)
+		//	{
+		//		cout << "You don't have added CS." << endl;
+		//	}
+		//	else
+		//	{
+		//		cout << "Change the number of workshops in operation: ";
+		//		station.work_shops = GetCorrectData(0, 1000);
+		//		//check_int(station.work_shops);
+		//		while (station.work_shops > station.shops)
+		//		{
+		//			cout << "The number of workstations cannot exceed the number of all stations!" << endl;
+		//			station.work_shops = GetCorrectData(0, 1000);
+		//			//check_int(station.work_shops);
+		//		}
+		//	}
+		//	break;
+		//}
+		//case 6:
+		//{
+		//	DataRecordingPipe(pipe, station);
+		//	DataRecordingCS(pipe, station);
+		//	break;
+		//}
+		//case 7:
+		//{
+		//	DataReceivingPipe(pipe);
+		//	DataReceivingCS(station);
+		//	break;
+		//}
 		case 8:
 		{
 			return false;
