@@ -130,10 +130,13 @@
     <ClCompile Include="CS.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Truba.cpp" />
+    <ClCompile Include="Truba_and_CS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CS.h" />
     <ClInclude Include="Truba.h" />
+    <ClInclude Include="Truba_and_CS.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

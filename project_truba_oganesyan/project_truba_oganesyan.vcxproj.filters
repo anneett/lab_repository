@@ -24,12 +24,21 @@
     <ClCompile Include="CS.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Truba_and_CS.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Truba.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="CS.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Truba_and_CS.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
