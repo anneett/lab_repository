@@ -14,28 +14,25 @@ T GetCorrectData(T min, T max)
 		cout << "\nEnter the correct data! Type number (" << min << " - " << max << "):";
 		cout << "\nEnter: ";
 	}
+    cerr << x << endl;
 	return x;
 }
 
-template <typename T>
-void logging_cout(const T& output)
+class redirect_output_wrapper
 {
-    ofstream log_file("logging.txt", ios::app);
-    if (log_file.is_open())
+    std::ostream& stream;
+    std::streambuf* const old_buf;
+public:
+    redirect_output_wrapper(std::ostream& src)
+        :old_buf(src.rdbuf()), stream(src)
     {
-        log_file << output << endl;
-        log_file.close();
     }
-    cout << output << endl;
-}
 
-template <typename T>
-void logging_cin(const T& output)
-{
-    ofstream log_file("logging.txt", ios::app);
-    if (log_file.is_open())
-    {
-        log_file << output << endl;
-        log_file.close();
+    ~redirect_output_wrapper() {
+        stream.rdbuf(old_buf);
     }
-}
+    void redirect(std::ostream& dest)
+    {
+        stream.rdbuf(dest.rdbuf());
+    }
+};

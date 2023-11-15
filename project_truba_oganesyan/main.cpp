@@ -6,64 +6,53 @@
 #include "CS.h"
 #include "Utils.h"
 #include "Truba_and_CS.h"
+#include <chrono>
+#include <format>
 
 using namespace std;
-
-//if (station.shops == 0)
-//{
-//	cout << "You don't have added CS." << endl;
-//}
-//else
-//{
-//	cout << "Change the number of workshops in operation: ";
-//	station.work_shops = GetCorrectData(0, 1000);
-//	//check_int(station.work_shops);
-//	while (station.work_shops > station.shops)
-//	{
-//		cout << "The number of workstations cannot exceed the number of all stations!" << endl;
-//		station.work_shops = GetCorrectData(0, 1000);
-//		//check_int(station.work_shops);
-//	}
-//}
+using namespace chrono;
 
 void ObjectsSaving(unordered_map <int, Truba>& pipes, unordered_map <int, CS>& stations)
 {
 	if (pipes.size() == 0 && stations.size() == 0)
 	{
-		logging_cout("You have no objects to save");
+		cout << "You have no objects to save" << endl;
 	}
 	else
 	{
 		string filename;
-		logging_cout("Enter filename: ");
+		cout << "Enter filename: " << endl;
 		cin >> filename;
-		logging_cout(filename);
 		ofstream fout;
 		fout.open((filename + ".txt"), ios::trunc);
 		if (fout.is_open())
 		{
-			fout << pipes.size() << " " << stations.size() << endl;
 			for (const auto& tb : pipes)
 			{
 				DataRecordingPipe(fout, tb.second);
-				logging_cout("Data about the pipe with ID " + to_string(tb.first) + " is saved to file named " + filename + ".");
+				cout << "Data about the pipe with ID " + to_string(tb.first) + " is saved to file named " + filename + "." << endl;
 			}
 			for (const auto& cs : stations)
 			{
 				DataRecordingCS(fout, cs.second);
-				logging_cout("Data about the station with ID " + to_string(cs.first) + " is saved to file named " + filename + ".");
+				cout << "Data about the station with ID " + to_string(cs.first) + " is saved to file named " + filename + "." << endl;
 			}
 			fout.close();
 		}
 		else
 		{
-			logging_cout("Could not open file named " + filename + ".");
+			cout << "Could not open file named " + filename + "." << endl;
 		}
 	}
 }
 
 int main()
 {
+	redirect_output_wrapper cerr_out(cerr);
+	string time = format("{:%d_%m_%Y %H_%M_%OS}", system_clock::now());
+	ofstream logfile("log_" + time);
+	if (logfile)
+		cerr_out.redirect(logfile);
 	unordered_map <int, Truba> pipes;
 	unordered_map <int, CS> stations;
 	while (true) {
@@ -76,11 +65,9 @@ int main()
 			<< "\n6. Filter: working with pipes;"
 			<< "\n7. Filter: working with stations;"
 			<< "\n0. Exit." << endl;
-
-		int number = -1;
 		cout << "\nSelect: ";
 
-		number = GetCorrectData(0, 7);
+		int number = GetCorrectData(0, 7);
 		switch (number)
 		{
 		case 1:
@@ -117,16 +104,12 @@ int main()
 		}
 		case 7:
 		{
+			Filter_CS(stations);
 			break;
 		}
 		case 0:
 		{
 			return false;
-		}
-		default:
-		{
-			cout << "Enter a number from 0 to 7!" << endl;
-			break;
 		}
 		}
 	}

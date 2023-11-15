@@ -8,14 +8,13 @@ class Truba
 {
 private:
 	int idpipe = 0;
+	static int max_idp;
+	string mark = "None";
 	double length = 0;
 	int diameter = 0;
+	bool repair = false;
 
 public:
-	string mark = "None";
-	bool repair = false;
-	static int max_idp;
-
 	Truba();
 	int get_idp() { return idpipe; };
 	friend ostream& operator << (ostream& out, const Truba& tb);
@@ -25,7 +24,8 @@ public:
 	friend void DataRecordingPipe(ofstream& fout, const Truba& tb);
 	friend void DownloadPipe(unordered_map <int, Truba>& pipes);
 	friend int Filter_pipes(unordered_map <int, Truba>& tb);
-	friend int Working_with_pipes(unordered_map <int, Truba>& tb);
+	friend void Edit_pipe(unordered_map <int, Truba>& p, vector <int>& id_filter);
+	friend int Working_with_pipes(unordered_map <int, Truba>& tb, vector <int>& id_filter);
 
 	//friend void ObjectsSaving(unordered_map <int, Truba>& pipes, unordered_map <int, CS>& stations);
 };

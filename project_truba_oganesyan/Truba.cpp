@@ -54,11 +54,11 @@ void DataRecordingPipe(ofstream& fout, const Truba& tb)
 {
 	if (tb.length == 0)
 	{
-		logging_cout("You do not have pipe data to save.");
+		cout << "You do not have pipe data to save." << endl;
 	}
 	else
 	{
-		logging_cout("Pipe data is written to a file.");
+		cout << "Pipe data is written to a file." << endl;
 		fout << "Pipe" << endl;
 		fout << tb.idpipe << endl << tb.mark << endl << tb.length << endl << tb.diameter << endl << tb.repair << endl;
 	}
@@ -67,9 +67,8 @@ void DataRecordingPipe(ofstream& fout, const Truba& tb)
 void DownloadPipe(unordered_map <int, Truba>& pipes)
 {
 	string filename;
-	logging_cout("Enter filename: ");
+	cout << "Enter filename: " << endl;
 	cin >> filename;
-	logging_cout(filename);
 	ifstream fin;
 	fin.open((filename + ".txt"));
 	if (fin.is_open())
@@ -85,7 +84,9 @@ void DownloadPipe(unordered_map <int, Truba>& pipes)
 					cout << "\nPipe" << endl;
 					fin >> pipe.idpipe;
 					cout << "Pipe ID: " << pipe.idpipe << endl;
-					fin >> pipe.mark;
+					fin.clear();
+					fin.ignore(1000, '\n');
+					getline(fin, pipe.mark);
 					cout << "Pipe elevation: " << pipe.mark << endl;
 					fin >> pipe.length;
 					cout << "Pipe length: " << pipe.length << endl;
@@ -105,7 +106,7 @@ void DownloadPipe(unordered_map <int, Truba>& pipes)
 	}
 	else
 	{
-		logging_cout("Could not open file named " + filename + " or it doesn't exist.");
+		cout << "Could not open file named " + filename + " or it doesn't exist." << endl;
 	}
 }
 
@@ -113,10 +114,10 @@ void OutputPipe(unordered_map <int, Truba>& tb)
 {
 	if (tb.size() == 0)
 	{
-		logging_cout("You don't have a pipe to watch.");
+		cout << "You don't have a pipe to watch." << endl;
 	}
 	else
-		logging_cout("Pipes:\n");
+		cout << "Pipes:\n" << endl;
 		for (auto& pipe : tb)
 			cout << pipe.second << endl;
 }
@@ -129,12 +130,10 @@ int Filter_pipes(unordered_map <int, Truba>& tb)
 			<< "\n1. Pipe name;"
 			<< "\n2. 'Under repair' sign;"
 			<< "\n3. All pipes."
-			<< "\n4. Exit.";
-
-		int number = -1;
+			<< "\n4. Exit." << endl;
 		cout << "\nSelect: ";
 
-		number = GetCorrectData(1, 4);
+		int number = GetCorrectData(1, 4);
 		switch (number)
 		{
 		case 1:
@@ -143,20 +142,16 @@ int Filter_pipes(unordered_map <int, Truba>& tb)
 			cout << "Enter an occurrence by name: ";
 			cin.ignore();
 			getline(cin, pipename);
-			unordered_map <int, Truba> trubs1;
+			vector <int> id1_filter;
 			for (auto& xpipe1: tb)
 			{
 				Truba& pipe_case1 = xpipe1.second;
 				if (pipe_case1.mark.find(pipename) != string::npos)
 				{
-					trubs1.insert({ pipe_case1.idpipe, pipe_case1 });
+					id1_filter.push_back(pipe_case1.idpipe);
 				}	 
 			}
-			Working_with_pipes(trubs1);
-			for (auto& y : trubs1)
-			{
-				cout << y.first << y.second << endl;
-			}
+			Working_with_pipes(tb, id1_filter);
 			break;
 		}
 		case 2:
@@ -164,116 +159,104 @@ int Filter_pipes(unordered_map <int, Truba>& tb)
 			bool repairpipe;
 			cout << "Enter an occurrence by attribute: ";
 			cin >> repairpipe;
-			unordered_map <int, Truba> trubs2;
-			for (auto& xpipe2 : tb)
+			vector <int> id2_filter;
+			for (auto& xpipe2: tb)
 			{
 				Truba pipe_case2 = xpipe2.second;
 				if (pipe_case2.repair == repairpipe)
 				{
-					trubs2.insert({ pipe_case2.idpipe, pipe_case2 });
+					id2_filter.push_back(pipe_case2.idpipe);
 				}
 			}
-			Working_with_pipes(trubs2);
-			for (auto& xxpipe2 : trubs2)
-			{
-				Truba& truba = xxpipe2.second;
-				tb.insert({ truba.idpipe, truba });
-			}
+			Working_with_pipes(tb, id2_filter);
 			break;
 		}
 		case 3:
 		{
+			vector <int> id3_filter;
+			for (auto& pipe_case3 : tb)
+			{
+				id3_filter.push_back(pipe_case3.first);
+			}
+			Working_with_pipes(tb, id3_filter);
 			break;
 		}
 		case 4:
 		{
 			return 0;
 		}
-		default:
-		{
-			cout << "Enter a number from 1 to 3!" << endl;
-			break;
-		}
 		}
 	}
 }
 
-void Edit_pipe(unordered_map <int, Truba>& p)
+void Edit_pipe(unordered_map <int, Truba>& tb, vector <int>& id_filter)
 {
-	if ((p.size()) != 0) {
-		cout << "Enter number of pipes to edit. You have " + to_string(p.size()) + " pipes. Enter: ";
-		int number_of_pipes = GetCorrectData(0, int(p.size()));
-		Truba ppipe;
-		int MaxID = ppipe.max_idp;
+	if ((id_filter.size()) != 0) {
+		cout << "Enter number of pipes to edit. You have " + to_string(id_filter.size()) + " pipes. Enter: ";
+		int number_of_pipes = GetCorrectData(0, int(id_filter.size()));
 		for (int i = 1; i <= number_of_pipes; i++)
 		{
-			cout << "Enter id pipe: ";
-			int id = GetCorrectData(0, MaxID - 1);
-			Truba& pipe = p[id];
-			pipe.repair = !pipe.repair;
+			cout << "Enter ID pipe: ";
+			int id = GetCorrectData(0, *max_element(id_filter.begin(), id_filter.end()));
+			if (find(id_filter.begin(), id_filter.end(), id) != id_filter.end())
+			{
+				Truba& pipe = tb[id];
+				pipe.repair = !pipe.repair;
+			}
 		}
-		ppipe.max_idp -= 1;
 	}
 	else
-		cout << " You do not have a pipes." << endl;
+		cout << " You do not have a pipes with this filter." << endl;
 }
 
-void Delete_pipe(unordered_map <int, Truba>& p)
+void Delete_pipe(unordered_map <int, Truba>& tb, vector <int>& id_filter)
 {
-	if ((p.size()) != 0) {
-		cout << "Enter number of pipes to delete. You have " + to_string(p.size()) + " pipes. Enter: ";
-		int number_of_pipes = GetCorrectData(0, int(p.size()));
-		Truba ppipe;
-		int MaxID = ppipe.max_idp;
-		cout << MaxID;
+	if ((id_filter.size()) != 0) {
+		cout << "Enter number of pipes to delete. You have " + to_string(id_filter.size()) + " pipes. Enter: ";
+		int number_of_pipes = GetCorrectData(0, int(id_filter.size()));
 		for (int i = 1; i <= number_of_pipes; i++)
 		{
-			cout << "Enter id pipe: ";
-			int id = GetCorrectData(0, MaxID - 1);
-			cout << "Entry the pipe state: ";
-			Truba& pipe = p[id];
-			p.erase(pipe.get_idp());
+			cout << "Enter ID pipe: ";
+			int id = GetCorrectData(0, *max_element(id_filter.begin(), id_filter.end()));
+			if (find(id_filter.begin(), id_filter.end(), id) != id_filter.end())
+			{
+				tb.erase(id);
+				vector<int>::iterator itr = find(id_filter.begin(), id_filter.end(), id);
+				id_filter.erase(itr);
+			}
 		}
-		ppipe.max_idp -= 1;
 	}
 	else
-		cout << " You do not have a pipes." << endl;
+		cout << " You do not have a pipes with this filter." << endl;
 }
 
-int Working_with_pipes(unordered_map <int, Truba>& p)
+int Working_with_pipes(unordered_map <int, Truba>& tb, vector <int>& id_filter)
 {
 	while (true)
 	{
-
+		cout << "You have " + to_string(id_filter.size()) + " pipes." << endl;
 		cout << "\nChoose what you want to do:"
 			<< "\n1. Edit pipe;"
 			<< "\n2. Delete pipe;"
-			<< "\n3. Exit.";
-
-		int number = -1;
+			<< "\n3. Exit." << endl;
 		cout << "\nSelect: ";
 
-		number = GetCorrectData(1, 3);
+		int number = GetCorrectData(1, 3);
 		switch (number)
 		{
 		case 1:
 		{
-			Edit_pipe(p);
+			Edit_pipe(tb, id_filter);
 			break;
 		}
 		case 2:
 		{
-			Delete_pipe(p);
+			Delete_pipe(tb, id_filter);
 			break;
 		}
 		case 3:
 		{
 			return 0;
-		}
-		default:
-		{
-			cout << "Enter a number from 1 to 3!" << endl;
-			break;
 		}
 		}
 	}
