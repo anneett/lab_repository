@@ -3,6 +3,11 @@
 
 using namespace std;
 
+//#define INPUT_LINE(in, str) getline(in>>ws, str); \
+//						cerr << str << endl
+//
+//#define PRINT_PARAM(out, x) out<< #x << "=" << x << endl
+
 template <typename T>
 T GetCorrectData(T min, T max)
 {
