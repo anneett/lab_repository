@@ -7,6 +7,13 @@ pipe 1
 1
 Pipe
 4
+1
+pipe 2
+4567
+567
+1
+Pipe
+4
 3
 pipe 4
 4567
