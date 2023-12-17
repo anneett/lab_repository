@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <fstream>
 #include <unordered_map>
@@ -14,28 +14,30 @@ using namespace chrono;
 
 int main()
 {
-	redirect_output_wrapper cerr_out(cerr);
-	string time = format("{:%d_%m_%Y %H_%M_%OS}", system_clock::now() + hours(3));
-	ofstream logfile("log_" + time);
-	if (logfile)
-		cerr_out.redirect(logfile);
+	//redirect_output_wrapper cerr_out(cerr);
+	//string time = format("{:%d_%m_%Y %H_%M_%OS}", system_clock::now() + hours(3));
+	//ofstream logfile("log_" + time);
+	//if (logfile)
+	//	cerr_out.redirect(logfile);
 
 	unordered_map <int, Truba> pipes;
 	unordered_map <int, CS> stations;
 	GTS gts;
+	vector<GTS> connection;
 	while (true) {
 		cout << "\nSelect menu item: "
 			<< "\n1. Add pipe;"
 			<< "\n2. Add compressor station;"
-			<< "\n3. View all objects;"
+			<< "\n3. View all objects and connections;"
 			<< "\n4. Save objects;"
 			<< "\n5. Download objects;"
 			<< "\n6. Filter: working with pipes;"
 			<< "\n7. Filter: working with stations;"
+			<< "\n8. Connect into a graph;"
 			<< "\n0. Exit." << endl;
 		cout << "\nSelect: ";
 
-		int number = GetCorrectData(0, 7);
+		int number = GetCorrectData(0, 8);
 		switch (number)
 		{
 		case 1:
@@ -52,6 +54,7 @@ int main()
 		{
 			gts.OutputPipe(pipes);
 			gts.OutputCS(stations);
+			gts.All_connections(connection);
 			break;
 		}
 		case 4:
@@ -67,12 +70,17 @@ int main()
 		}
 		case 6:
 		{
-			gts.Filter_pipes(pipes);
+			gts.Filter_pipes(pipes, connection, stations);
 			break;
 		}
 		case 7:
 		{
-			gts.Filter_CS(stations);
+			gts.Filter_CS(stations, connection, pipes);
+			break;
+		}
+		case 8:
+		{
+			gts.Connection(pipes, stations, connection);
 			break;
 		}
 		case 0:

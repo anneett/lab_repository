@@ -12,8 +12,6 @@ CS::CS()
 	idcs = max_ids++;
 }
 
-
-
 istream& operator >> (istream& in, CS& cs)
 {
 	cout << "Enter the title: ";
@@ -44,9 +42,11 @@ ostream& operator << (ostream& out, const CS& cs)
 		cout << "CS MaxID: " << cs.max_ids
 			<< "\nCS ID: " << cs.idcs
 			<< "\nTitle: " << cs.name
-			<< "\nEnter the number of workshops: " << cs.shops
-			<< "\nEnter the number of workshops in operation: " << cs.work_shops
-			<< "\nEnter efficiency: " << cs.efficiency << endl;
+			<< "\nThe number of workshops: " << cs.shops
+			<< "\nThe number of workshops in operation: " << cs.work_shops
+			<< "\nEfficiency: " << cs.efficiency 
+			<< "\nNumber of entry pipes: " << cs.id_input 
+			<< "\nNumber of outlet pipes: " << cs.id_output << endl;
 	}
 	return out;
 }
@@ -64,4 +64,3 @@ void DataRecordingCS(ofstream& fout, const CS& cs)
 		fout << cs.max_ids << endl << cs.idcs << endl << cs.name << endl << cs.shops << endl << cs.work_shops << endl << cs.efficiency << endl;
 	}
 }
-

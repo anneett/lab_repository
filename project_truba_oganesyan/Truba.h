@@ -13,6 +13,7 @@ public:
 	double length = 0;
 	int diameter = 0;
 	bool repair = false;
+	bool free = 1;
 	Truba();
 	int get_idp() { return idpipe; };
 	friend ostream& operator << (ostream& out, const Truba& tb);

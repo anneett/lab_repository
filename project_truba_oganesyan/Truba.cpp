@@ -20,8 +20,17 @@ istream& operator >> (istream& in, Truba& tb)
 	//INPUT_LINE(in, tb.mark);
 	cout << "Enter pipe length: ";
 	tb.length = GetCorrectData(0.0, 10000.0);
-	cout << "Enter pipe diameter: ";
-	tb.diameter = GetCorrectData(500, 1400);
+	cout << "Enter pipe diameter (500, 700, 1000, 1400): ";
+	while (true)
+	{
+		tb.diameter = GetCorrectData(500, 1400);
+		if (tb.diameter != 500 && tb.diameter != 700 && tb.diameter != 1000 && tb.diameter != 1400)
+		{
+			cout << "Enter pipe diameter 500, 700, 1000 or 1400! Enter: ";
+		}
+		else 
+			break;
+	}
 	cout << "Enter the pipe attribute: ";
 	tb.repair = GetCorrectData(0, 1);
 	return in;
@@ -40,7 +49,8 @@ ostream& operator << (ostream& out, const Truba& tb)
 			<< "\nPipe mark: " << tb.mark
 			<< "\nPipe length: " << tb.length
 			<< "\nPipe diameter: " << tb.diameter
-			<< "\nThe pipe attribute: " << tb.repair << endl;
+			<< "\nThe pipe attribute: " << tb.repair
+			<< "\nThe free parameter: " << tb.free << endl;
 		//PRINT_PARAM(out, tb.idpipe);
 		//PRINT_PARAM(out, tb.mark);
 		//PRINT_PARAM(out, tb.length);
