@@ -1,4 +1,4 @@
-#include "Truba.h"
+﻿#include "Truba.h"
 #include "CS.h"
 #include <iostream>
 #include <fstream>
@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "Truba_and_CS.h"
 #include <set>
+#include <stack>
 
 using namespace std;
 
@@ -651,7 +652,7 @@ void GTS::Connection(unordered_map <int, Truba>& pipes, unordered_map <int, CS>&
 		}
 		else
 		{
-			cout << "There is no free pipe with this diameter. Try again.";
+			cout << "There is no free pipe with this diameter. ";
 			int new_id_pipe = Add_newpipe_connect(pipes, pipe_diameter);
 			pipe_connect.id_pipe = new_id_pipe;
 			pipes[new_id_pipe].free = 0;
@@ -661,7 +662,9 @@ void GTS::Connection(unordered_map <int, Truba>& pipes, unordered_map <int, CS>&
 	}
 }
 
-int GTS::Add_newpipe_connect(unordered_map<int, Truba>& pipe, int diameter) {
+int GTS::Add_newpipe_connect(unordered_map<int, Truba>& pipe, int diameter)
+{
+	cout << "Despite the entered diameter, the one that was missing will be installed." << endl;
 	Truba tr;
 	cin >> tr;
 	tr.diameter = diameter;
@@ -686,8 +689,88 @@ void GTS::All_connections(vector<GTS>& connection)
 		}
 	}
 }
-//
-//void GTS::Topological_sort(vector<GTS>& graph)
-//{
-//
-//}
+
+bool isCyclicUtil(int v, vector<GTS>& graph, vector<bool>& visited, vector<bool>& recStack) {
+	if (!visited[v]) {
+		visited[v] = true;
+		recStack[v] = true;
+
+		for (auto edge : graph) {
+			if (edge.id_entry == v) {
+				int i = edge.id_outlet;
+				if (!visited[i] && isCyclicUtil(i, graph, visited, recStack))
+					return true;
+				else if (recStack[i])
+					return true;
+			}
+		}
+	}
+
+	recStack[v] = false;
+	return false;
+}
+
+bool isCyclic(vector<GTS>& graph, int n) {
+	vector<bool> visited(n, false);
+	vector<bool> recStack(n, false);
+
+	for (int v = 0; v < n; v++) {
+		if (isCyclicUtil(v, graph, visited, recStack))
+			return true;
+	}
+
+	return false;
+}
+
+void topologicalSortUtil(int v, vector<GTS>& graph, vector<bool>& visited, stack<int>& stack) {
+	visited[v] = true;
+	for (auto edge : graph) {
+		if (edge.id_entry == v) {
+			int i = edge.id_outlet;
+			if (!visited[i])
+				topologicalSortUtil(i, graph, visited, stack);
+		}
+	}
+	stack.push(v);
+}
+
+void GTS::TopologicalSort(vector<GTS>& graph) {
+	if (graph.size() == 0)
+	{
+		cout << "You have no connections." << endl;
+		return;
+	}
+	set<int>vertex;
+	for (auto& edge : graph)
+	{
+		vertex.insert(edge.id_entry);
+		vertex.insert(edge.id_outlet);
+	}
+	int n = vertex.size();
+
+	vector<bool> visited(n, false);
+	stack<int> stack;
+
+	for (int v = 0; v < n; v++) {
+		if (!visited[v])
+			topologicalSortUtil(v, graph, visited, stack);
+	}
+
+	vector<int> result;
+	while (!stack.empty()) {
+		result.push_back(stack.top());
+		stack.pop();
+	}
+
+	if (isCyclic(graph, n)) {
+		cout << "Graph contains a cycle.\n";
+	}
+	else {
+		cout << "Topologically sorted list of vertices: ";
+		for (int v : result) {
+			cout << v << " ";
+		}
+		cout << endl;
+	}
+
+}

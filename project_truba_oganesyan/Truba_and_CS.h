@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include <set>
 #include "Truba.h"
 #include "CS.h"
 
@@ -24,4 +25,6 @@ public:
 	void Connection(unordered_map <int, Truba>& pipes, unordered_map <int, CS>& stations, vector<GTS>& connection);
 	int Add_newpipe_connect(unordered_map<int, Truba>& pipe, int diameter);
 	void All_connections(vector<GTS>& connection);
+
+	void TopologicalSort(vector<GTS>& graph);
 };

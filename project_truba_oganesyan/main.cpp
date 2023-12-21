@@ -34,10 +34,11 @@ int main()
 			<< "\n6. Filter: working with pipes;"
 			<< "\n7. Filter: working with stations;"
 			<< "\n8. Connect into a graph;"
+			<< "\n9. Perform topological sort;"
 			<< "\n0. Exit." << endl;
 		cout << "\nSelect: ";
 
-		int number = GetCorrectData(0, 8);
+		int number = GetCorrectData(0, 9);
 		switch (number)
 		{
 		case 1:
@@ -81,6 +82,11 @@ int main()
 		case 8:
 		{
 			gts.Connection(pipes, stations, connection);
+			break;
+		}
+		case 9:
+		{
+			gts.TopologicalSort(connection);
 			break;
 		}
 		case 0:
