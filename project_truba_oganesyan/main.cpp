@@ -35,10 +35,11 @@ int main()
 			<< "\n7. Filter: working with stations;"
 			<< "\n8. Connect into a graph;"
 			<< "\n9. Perform topological sort;"
+			<< "\n10. Find the shortest path;"
 			<< "\n0. Exit." << endl;
 		cout << "\nSelect: ";
 
-		int number = GetCorrectData(0, 9);
+		int number = GetCorrectData(0, 10);
 		switch (number)
 		{
 		case 1:
@@ -87,6 +88,11 @@ int main()
 		case 9:
 		{
 			gts.TopologicalSort(connection);
+			break;
+		}
+		case 10:
+		{
+			gts.dijkstra(pipes, connection, stations);
 			break;
 		}
 		case 0:

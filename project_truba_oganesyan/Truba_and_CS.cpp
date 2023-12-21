@@ -774,3 +774,88 @@ void GTS::TopologicalSort(vector<GTS>& graph) {
 	}
 
 }
+
+void GTS::dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordered_map<int, CS>& ks)
+{
+	if (graph.size() == 0)
+	{
+		cout << "You have no connections." << endl;
+		return;
+	}
+
+	set<int>vertexes;
+	for (auto& edge : graph)
+	{
+		vertexes.insert(edge.id_entry);
+		vertexes.insert(edge.id_outlet);
+	}
+
+	int start_vertex;
+	int end_vertex;
+
+	cout << "Enter CS from which you want to find the shortest path: ";
+	cin >> start_vertex;
+
+	if (find(vertexes.begin(), vertexes.end(), start_vertex) == vertexes.end())
+	{
+		while (true)
+		{
+			cout << "There is no such ID, please enter it again: ";
+			cin >> start_vertex;
+			if (find(vertexes.begin(), vertexes.end(), start_vertex) != vertexes.end())
+			{
+				break;
+			}
+		}
+	}
+
+	cout << "Enter the cs you want to find the shortest path to: ";
+	cin >> end_vertex;
+
+	if (find(vertexes.begin(), vertexes.end(), end_vertex) == vertexes.end())
+	{
+		while (true)
+		{
+			cout << "There is no such ID, please enter it again: ";
+			cin >> end_vertex;
+			if (find(vertexes.begin(), vertexes.end(), start_vertex) != vertexes.end())
+			{
+				break;
+			}
+		}
+	}
+
+	for (const auto& vertex : vertexes) {
+		ks[vertex].shortest_path = std::numeric_limits<int>::max();
+	}
+
+	ks[start_vertex].shortest_path = 0;
+
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+	pq.push({ 0, start_vertex });
+
+	while (!pq.empty()) {
+		int current_vertex = pq.top().second;
+		int current_distance = pq.top().first;
+		pq.pop();
+
+		if (current_vertex == end_vertex) {
+			break;
+		}
+
+		for (const auto& edge : graph) {
+			if (edge.id_entry == current_vertex) {
+				int neighbor_vertex = edge.id_outlet;
+				const Truba& truba = pipe[edge.id_pipe];
+				int new_distance = current_distance + truba.length;
+
+				if (new_distance < ks[neighbor_vertex].shortest_path) {
+					ks[neighbor_vertex].shortest_path = new_distance;
+					pq.push({ new_distance, neighbor_vertex });
+				}
+			}
+		}
+	}
+
+	cout << "Shortest path from " << start_vertex << " to " << end_vertex << ": " << ks[end_vertex].shortest_path << endl;
+}

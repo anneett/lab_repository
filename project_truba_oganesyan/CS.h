@@ -9,12 +9,16 @@ class CS
 public:
 	int idcs = 0;
 	static int max_ids;
+
 	string name = "None";
 	int shops = 0;
 	int work_shops = 0;
 	char efficiency = 'F';
+
 	int id_input = 0;
 	int id_output = 0;
+	int shortest_path;
+
 	CS();
 	int get_ids() { return idcs; };
 	friend ostream& operator << (ostream& out, const CS& cs);

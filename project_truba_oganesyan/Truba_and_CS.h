@@ -1,8 +1,11 @@
 #pragma once
 #include <unordered_map>
 #include <set>
+#include <limits>
+#include <queue>
 #include "Truba.h"
 #include "CS.h"
+#include <algorithm> 
 
 class GTS
 {
@@ -27,4 +30,5 @@ public:
 	void All_connections(vector<GTS>& connection);
 
 	void TopologicalSort(vector<GTS>& graph);
+	void dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordered_map<int, CS>& ks);
 };

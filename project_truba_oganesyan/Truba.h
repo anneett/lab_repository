@@ -9,10 +9,12 @@ class Truba
 public:
 	int idpipe = 0;
 	static int max_idp;
+
 	string mark = "None";
 	double length = 0;
 	int diameter = 0;
 	bool repair = false;
+
 	bool free = 1;
 	Truba();
 	int get_idp() { return idpipe; };
