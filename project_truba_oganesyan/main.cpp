@@ -88,7 +88,7 @@ int main()
 		}
 		case 9:
 		{
-			gts.TopologicalSort(connection);
+			gts.TopologicalSort(connection, stations);
 			break;
 		}
 		case 10:

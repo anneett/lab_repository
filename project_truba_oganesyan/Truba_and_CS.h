@@ -29,7 +29,7 @@ public:
 	int Add_newpipe_connect(unordered_map<int, Truba>& pipe, int diameter);
 	void All_connections(vector<GTS>& connection);
 
-	void TopologicalSort(vector<GTS>& graph);
+	void TopologicalSort(vector<GTS>& graph, unordered_map<int, CS>& cs);
 	void dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordered_map<int, CS>& ks);
 
 	void fordFulkerson(vector<GTS>& graph, unordered_map<int, Truba>& pipe, unordered_map<int, CS>& cs);

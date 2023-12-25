@@ -734,7 +734,7 @@ void topologicalSortUtil(int v, vector<GTS>& graph, vector<bool>& visited, stack
 	stack.push(v);
 }
 
-void GTS::TopologicalSort(vector<GTS>& graph) {
+void GTS::TopologicalSort(vector<GTS>& graph, unordered_map<int, CS>& cs) {
 	if (graph.size() == 0)
 	{
 		cout << "You have no connections." << endl;
@@ -746,14 +746,17 @@ void GTS::TopologicalSort(vector<GTS>& graph) {
 		vertex.insert(edge.id_entry);
 		vertex.insert(edge.id_outlet);
 	}
-	int n = vertex.size();
+	int n = cs.size();
 
 	vector<bool> visited(n, false);
 	stack<int> stack;
 
 	for (int v = 0; v < n; v++) {
-		if (!visited[v])
-			topologicalSortUtil(v, graph, visited, stack);
+		if (find(vertex.begin(), vertex.end(), v) != vertex.end())
+		{
+			if (!visited[v])
+				topologicalSortUtil(v, graph, visited, stack);
+		}
 	}
 
 	vector<int> result;
@@ -962,7 +965,7 @@ void GTS::fordFulkerson(vector<GTS>& graph, unordered_map<int, Truba>& pipe, uno
 		}
 		
 	}
-	int V = vertexes.size();
+	int V = cs.size();
 	vector<vector<int>> RGraph(V, vector<int>(V, 0));
 	for (const GTS& edge : graph) {
 		RGraph[edge.id_entry][edge.id_outlet] = pipe[edge.id_pipe].length;
@@ -989,5 +992,5 @@ void GTS::fordFulkerson(vector<GTS>& graph, unordered_map<int, Truba>& pipe, uno
 
 		maxFlow += pathFlow;
 	}
-	cout << maxFlow;
+	cout << "Maximum flow: " << maxFlow;
 }
