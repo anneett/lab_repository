@@ -31,4 +31,6 @@ public:
 
 	void TopologicalSort(vector<GTS>& graph);
 	void dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordered_map<int, CS>& ks);
+
+	void fordFulkerson(vector<GTS>& graph, unordered_map<int, Truba>& pipe, unordered_map<int, CS>& cs);
 };

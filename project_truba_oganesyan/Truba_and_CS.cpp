@@ -772,7 +772,6 @@ void GTS::TopologicalSort(vector<GTS>& graph) {
 		}
 		cout << endl;
 	}
-
 }
 
 void GTS::dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordered_map<int, CS>& ks)
@@ -782,20 +781,37 @@ void GTS::dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordere
 		cout << "You have no connections." << endl;
 		return;
 	}
+	int maxel = 0;
+	int minel = ks[0].max_ids;
 
 	set<int>vertexes;
 	for (auto& edge : graph)
 	{
 		vertexes.insert(edge.id_entry);
 		vertexes.insert(edge.id_outlet);
+		if (edge.id_entry > maxel)
+		{
+			maxel = edge.id_entry;
+		}
+		if (edge.id_entry < minel)
+		{
+			minel = edge.id_entry;
+		}
+		if (edge.id_outlet > maxel)
+		{
+			maxel = edge.id_outlet;
+		}
+		if (edge.id_outlet < minel)
+		{
+			minel = edge.id_outlet;
+		}
 	}
 
 	int start_vertex;
 	int end_vertex;
 
 	cout << "Enter CS from which you want to find the shortest path: ";
-	cin >> start_vertex;
-
+	start_vertex = GetCorrectData(minel, maxel);
 	if (find(vertexes.begin(), vertexes.end(), start_vertex) == vertexes.end())
 	{
 		while (true)
@@ -810,7 +826,7 @@ void GTS::dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordere
 	}
 
 	cout << "Enter the cs you want to find the shortest path to: ";
-	cin >> end_vertex;
+	end_vertex = GetCorrectData(minel, maxel);
 
 	if (find(vertexes.begin(), vertexes.end(), end_vertex) == vertexes.end())
 	{
@@ -826,7 +842,7 @@ void GTS::dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordere
 	}
 
 	for (const auto& vertex : vertexes) {
-		ks[vertex].shortest_path = std::numeric_limits<int>::max();
+		ks[vertex].shortest_path = numeric_limits<int>::max();
 	}
 
 	ks[start_vertex].shortest_path = 0;
@@ -856,6 +872,122 @@ void GTS::dijkstra(unordered_map<int, Truba>& pipe, vector<GTS>& graph, unordere
 			}
 		}
 	}
+	if (ks[end_vertex].shortest_path == numeric_limits<int>::max())
+	{
+		cout << "There is no path from " << start_vertex << " to " << end_vertex << "." << endl;
+	}
+	else
+	{
+		cout << "Shortest path from " << start_vertex << " to " << end_vertex << ": " << ks[end_vertex].shortest_path << endl;
+	}
+}
 
-	cout << "Shortest path from " << start_vertex << " to " << end_vertex << ": " << ks[end_vertex].shortest_path << endl;
+bool bfs(vector<vector<int>>& rGraph, int s, int t, vector<int>& parent)
+{
+	int V = rGraph.size();
+	vector<bool> visited(V, false);
+
+	queue<int> q;
+	q.push(s);
+	visited[s] = true;
+	parent[s] = -1;
+
+	while (!q.empty())
+	{
+		int u = q.front();
+		q.pop();
+
+		for (int v = 0; v < V; v++)
+		{
+			if (visited[v] == false && rGraph[u][v] > 0)
+			{
+				q.push(v);
+				parent[v] = u;
+				visited[v] = true;
+			}
+		}
+	}
+
+	return (visited[t] == true);
+}
+
+void GTS::fordFulkerson(vector<GTS>& graph, unordered_map<int, Truba>& pipe, unordered_map<int, CS>& cs)
+{
+	if (graph.size() == 0)
+	{
+		cout << "You have no connections." << endl;
+		return;
+	}
+	int maxel = 0;
+	int minel = cs[0].max_ids;
+
+	set<int>vertexes;
+	for (auto& edge : graph)
+	{
+		vertexes.insert(edge.id_entry);
+		vertexes.insert(edge.id_outlet);
+		if (edge.id_entry > maxel)
+		{
+			maxel = edge.id_entry;
+		}
+		if (edge.id_entry < minel)
+		{
+			minel = edge.id_entry;
+		}
+		if (edge.id_outlet > maxel)
+		{
+			maxel = edge.id_outlet;
+		}
+		if (edge.id_outlet < minel)
+		{
+			minel = edge.id_outlet;
+		}
+	}
+	int s;
+	cout << "Enter the source: ";
+	s = GetCorrectData(minel, maxel);
+	cout << "Enter the sink: ";
+	int t;
+	t = GetCorrectData(minel, maxel);
+
+	if (s == t)
+	{
+		while (true)
+		{
+			cout << "Source and sink must not be the same number!" << endl;
+			t = GetCorrectData(minel, maxel);
+			if (s != t) {
+				break;
+			}
+		}
+		
+	}
+	int V = vertexes.size();
+	vector<vector<int>> RGraph(V, vector<int>(V, 0));
+	for (const GTS& edge : graph) {
+		RGraph[edge.id_entry][edge.id_outlet] = pipe[edge.id_pipe].length;
+	}
+
+	vector<int> parent(V, -1);
+	int maxFlow = 0;
+
+	while (bfs(RGraph, s, t, parent))
+	{
+		int pathFlow = INT_MAX;
+		for (int v = t; v != s; v = parent[v])
+		{
+			int u = parent[v];
+			pathFlow = min(pathFlow, RGraph[u][v]);
+		}
+
+		for (int v = t; v != s; v = parent[v])
+		{
+			int u = parent[v];
+			RGraph[u][v] -= pathFlow;
+			RGraph[v][u] += pathFlow;
+		}
+
+		maxFlow += pathFlow;
+	}
+	cout << maxFlow;
 }
